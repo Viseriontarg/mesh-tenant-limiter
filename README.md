@@ -1,6 +1,17 @@
 # Mesh Tenant Limiter
 
-`mesh-tenant-limiter` is a Go project that demonstrates how tenant rate-limiting gets tricky in distributed systems. The repo is intentionally shaped as a publishable engineering artifact: it contains a working limiter, HTTP/gRPC integration points, a hot-reloadable config API, a Redis Lua sync backend, a deterministic local demo, and benchmarks/tests aimed at showing systems-thinking rather than only framework wiring.
+[![CI](https://github.com/Viseriontarg/mesh-tenant-limiter/actions/workflows/ci.yml/badge.svg)](https://github.com/Viseriontarg/mesh-tenant-limiter/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Go Version](https://img.shields.io/badge/Go-1.25%2B-00ADD8?logo=go)](go.mod)
+
+`mesh-tenant-limiter` is a Go systems project exploring tenant-aware rate limiting in distributed environments. It is designed as a recruiter-friendly engineering artifact: small enough to run locally, but structured to show practical tradeoffs around latency, coordination, fail-open behavior, observability, and maintainability.
+
+In one repository, it demonstrates:
+
+- a working limiter with HTTP and gRPC integration points
+- dynamic tenant-tier updates without process restarts
+- a deterministic local simulation of noisy-neighbor and fail-open scenarios
+- benchmarks, race coverage, and GitHub automation expected in a polished public project
 
 ## What This Repo Demonstrates
 
@@ -53,12 +64,31 @@ The demo is fully local and shows three things:
 - fail-open behavior when the backend becomes unavailable
 - live config updates without restarting the process
 
+Example output:
+
+```text
+Noisy Neighbor Across Nodes
+- Independent per-node limiters: allowed=8 denied=0
+- Shared global limiter: allowed=5 denied=3
+
+Backend Outage
+- Fail-open circuit breaker: allowed=2 denied=0
+```
+
 ## Validation
 
 ```bash
 go test ./...
+go test -race ./...
 go test -bench=. ./pkg/limiter
 ```
+
+## Key Engineering Decisions
+
+- The request path is intentionally local-first to keep overhead small and behavior easy to reason about in a demo setting.
+- Redis synchronization is asynchronous because the project is more interesting as a latency-versus-correctness tradeoff study than as a simplistic centralized throttle.
+- Configuration is modeled as a shared in-memory store with a mutation API so runtime behavior changes are explicit and testable.
+- The deterministic simulator exists to make the design argument visible without requiring Docker, Kubernetes, or a live Redis deployment.
 
 ## Architecture
 

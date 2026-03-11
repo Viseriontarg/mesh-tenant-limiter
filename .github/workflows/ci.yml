@@ -14,6 +14,12 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      - name: Verify formatting
+        run: |
+          unformatted="$(gofmt -l $(find . -name '*.go' -not -path './vendor/*'))"
+          test -z "$unformatted"
+      - name: Vet
+        run: go vet ./...
       - name: Test
         run: go test ./...
       - name: Race Test
