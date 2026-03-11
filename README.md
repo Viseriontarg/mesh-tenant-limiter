@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Go Version](https://img.shields.io/badge/Go-1.25%2B-00ADD8?logo=go)](go.mod)
 
-`mesh-tenant-limiter` is a Go systems project exploring tenant-aware rate limiting in distributed environments. It is designed as a recruiter-friendly engineering artifact: small enough to run locally, but structured to show practical tradeoffs around latency, coordination, fail-open behavior, observability, and maintainability.
+`mesh-tenant-limiter` is a Go project focused on tenant-aware rate limiting in distributed environments. It stays small enough to run locally while still showing practical tradeoffs around latency, coordination, fail-open behavior, observability, and maintainability.
 
 In one repository, it demonstrates:
 
